@@ -801,14 +801,30 @@ server <- function(input, output, session) {
   # 下载图片
   output$download_plot2 <- downloadHandler(
     filename = function() {
-      paste0("plotly_image.", input$save_format2)
+      paste0("gene_expression_plot.", input$save_format2)
     },
     content = function(file) {
-      req(plotly_obj2())
-      width_px  <- as.numeric(input$save_width2)  * as.numeric(input$save_dpi2)
-      height_px <- as.numeric(input$save_height2) * as.numeric(input$save_dpi2)
-      file_norm <- normalizePath(file, winslash = "/", mustWork = FALSE)
-      plotly::save_image(plotly_obj2(), file = file_norm, width = width_px, height = height_px)
+      req(ggplot_obj2())  # 注意要对 ggplot_obj2() 进行保存
+      # 宽高与 DPI 依然用你在UI里输入的数值
+      if (input$save_format2 == "pdf") {
+        ggsave(
+          filename = file,
+          plot     = ggplot_obj2(),
+          device   = "pdf",
+          width    = input$save_width2,
+          height   = input$save_height2,
+          dpi      = input$save_dpi2
+        )
+      } else {
+        ggsave(
+          filename = file,
+          plot     = ggplot_obj2(),
+          device   = "png",
+          width    = input$save_width2,
+          height   = input$save_height2,
+          dpi      = input$save_dpi2
+        )
+      }
     }
   )
   
