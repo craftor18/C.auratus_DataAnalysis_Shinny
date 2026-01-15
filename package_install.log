@@ -1,0 +1,127 @@
+
+R version 4.3.3 (2024-02-29) -- "Angel Food Cake"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> install.packages(c("shiny", "shinythemes", "ggplot2", "ggpubr", "dplyr", "tidyr", "readr", "stats", "FSA", "rlang", "grid", "colourpicker", "plotly", "stringr", "reticulate", "DT", "showtext", "patchwork", "ggrepel", "scales"), repos="http://cran.us.r-project.org", lib="/home/jules/R_libs")
+also installing the dependencies ‘xts’, ‘TTR’, ‘quantmod’, ‘tseries’, ‘RcppArmadillo’, ‘forecast’, ‘modelr’, ‘doBy’, ‘minqa’, ‘nloptr’, ‘reformulas’, ‘Rdpack’, ‘RcppEigen’, ‘evaluate’, ‘highr’, ‘xfun’, ‘tinytex’, ‘askpass’, ‘sass’, ‘broom’, ‘corrplot’, ‘pkgconfig’, ‘utf8’, ‘bit64’, ‘progress’, ‘carData’, ‘abind’, ‘Formula’, ‘pbkrtest’, ‘quantreg’, ‘lme4’, ‘zoo’, ‘knitr’, ‘rmarkdown’, ‘yaml’, ‘curl’, ‘openssl’, ‘rprojroot’, ‘bslib’, ‘fontawesome’, ‘httpuv’, ‘promises’, ‘gtable’, ‘isoband’, ‘S7’, ‘vctrs’, ‘ggsci’, ‘purrr’, ‘cowplot’, ‘ggsignif’, ‘gridExtra’, ‘polynom’, ‘rstatix’, ‘tibble’, ‘generics’, ‘pillar’, ‘tidyselect’, ‘cpp11’, ‘clipr’, ‘crayon’, ‘hms’, ‘vroom’, ‘tzdb’, ‘car’, ‘dunn.test’, ‘FlexParamCurve’, ‘lmtest’, ‘plotrix’, ‘htmlwidgets’, ‘miniUI’, ‘shinyjs’, ‘httr’, ‘viridisLite’, ‘RColorBrewer’, ‘lazyeval’, ‘crosstalk’, ‘data.table’, ‘stringi’, ‘RcppTOML’, ‘here’, ‘png’, ‘sysfonts’, ‘showtextdb’, ‘farver’, ‘labeling’
+
+trying URL 'http://cran.us.r-project.org/src/contrib/xts_0.14.1.tar.gz'
+Content type 'application/x-gzip' length 878211 bytes (857 KB)
+==================================================
+downloaded 857 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/TTR_0.24.4.tar.gz'
+Content type 'application/x-gzip' length 318965 bytes (311 KB)
+==================================================
+downloaded 311 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/quantmod_0.4.28.tar.gz'
+Content type 'application/x-gzip' length 156731 bytes (153 KB)
+==================================================
+downloaded 153 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/tseries_0.10-59.tar.gz'
+Content type 'application/x-gzip' length 165634 bytes (161 KB)
+==================================================
+downloaded 161 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/RcppArmadillo_15.2.3-1.tar.gz'
+Content type 'application/x-gzip' length 2123239 bytes (2.0 MB)
+==================================================
+downloaded 2.0 MB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/forecast_9.0.0.tar.gz'
+Content type 'application/x-gzip' length 589836 bytes (576 KB)
+==================================================
+downloaded 576 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/modelr_0.1.11.tar.gz'
+Error in download.file(url, destfile, method, mode = "wb", ...) :
+  cannot open URL 'http://cran.us.r-project.org/src/contrib/modelr_0.1.11.tar.gz'
+In addition: Warning messages:
+1: packages ‘stats’, ‘grid’ are base packages, and should not be updated
+2: In download.file(url, destfile, method, mode = "wb", ...) :
+  URL 'http://cran.us.r-project.org/src/contrib/modelr_0.1.11.tar.gz': Timeout of 60 seconds was reached
+Warning in download.packages(pkgs, destdir = tmpd, available = available,  :
+  download of package ‘modelr’ failed
+trying URL 'http://cran.us.r-project.org/src/contrib/doBy_4.7.1.tar.gz'
+Content type 'application/x-gzip' length 4468168 bytes (4.3 MB)
+==================================================
+downloaded 4.3 MB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/minqa_1.2.8.tar.gz'
+Content type 'application/x-gzip' length 54644 bytes (53 KB)
+==================================================
+downloaded 53 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/nloptr_2.2.1.tar.gz'
+Content type 'application/x-gzip' length 2253853 bytes (2.1 MB)
+==================================================
+downloaded 2.1 MB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/reformulas_0.4.3.1.tar.gz'
+Content type 'application/x-gzip' length 85222 bytes (83 KB)
+==================================================
+downloaded 83 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/Rdpack_2.6.4.tar.gz'
+Content type 'application/x-gzip' length 379140 bytes (370 KB)
+==================================================
+downloaded 370 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/RcppEigen_0.3.4.0.2.tar.gz'
+Content type 'application/x-gzip' length 1761745 bytes (1.7 MB)
+==================================================
+downloaded 1.7 MB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/evaluate_1.0.5.tar.gz'
+Content type 'application/x-gzip' length 39322 bytes (38 KB)
+==================================================
+downloaded 38 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/highr_0.11.tar.gz'
+Content type 'application/x-gzip' length 13851 bytes (13 KB)
+==================================================
+downloaded 13 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/xfun_0.55.tar.gz'
+Content type 'application/x-gzip' length 171605 bytes (167 KB)
+==================================================
+downloaded 167 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/tinytex_0.58.tar.gz'
+Content type 'application/x-gzip' length 36344 bytes (35 KB)
+==================================================
+downloaded 35 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/askpass_1.2.1.tar.gz'
+Content type 'application/x-gzip' length 6058 bytes
+==================================================
+downloaded 6058 bytes
+
+trying URL 'http://cran.us.r-project.org/src/contrib/sass_0.4.10.tar.gz'
+Content type 'application/x-gzip' length 3025163 bytes (2.9 MB)
+==================================================
+downloaded 2.9 MB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/broom_1.0.11.tar.gz'
+Content type 'application/x-gzip' length 510265 bytes (498 KB)
+==================================================
+downloaded 498 KB
+
+trying URL 'http://cran.us.r-project.org/src/contrib/corrplot_0.95.tar.gz'

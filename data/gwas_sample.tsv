@@ -1,0 +1,10 @@
+Sample	Genotype	Individual	Height	Weight	LeafArea	RootLength	SeedCount	Yield
+S01	A/A	Ind01	25.1	10.5	15.2	5.1	300	50.2
+S02	A/A	Ind02	26.2	10.8	15.5	5.3	310	51.5
+S03	A/A	Ind03	24.8	10.2	14.9	5.0	295	49.8
+S04	A/G	Ind04	28.3	11.2	16.8	5.5	320	55.1
+S05	A/G	Ind05	27.9	11.0	16.5	5.4	315	54.5
+S06	A/G	Ind06	28.8	11.5	17.2	5.7	330	56.2
+S07	G/G	Ind07	22.0	9.8	14.5	4.8	280	48.9
+S08	G/G	Ind08	21.5	9.5	14.2	4.7	275	47.5
+S09	G/G	Ind09	22.5	10.0	14.8	4.9	285	49.5
