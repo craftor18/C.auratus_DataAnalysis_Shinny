@@ -15,7 +15,6 @@ library(FSA)          # Dunn’s Test
 library(rlang)        # 用于 !!sym()
 library(grid)         # 用于 unit()
 library(colourpicker) # 用于交互式颜色选择
-library(plotly)
 library(stringr)
 library(reticulate)
 library(DT)
@@ -186,7 +185,7 @@ ui <- navbarPage(
                     downloadButton("download_plot2", "下载图片", class = "btn btn-success")
                   ),
                   mainPanel(
-                    plotlyOutput("violin_plot2", height = "600px")
+                    plotOutput("violin_plot2", height = "600px")
                   )
                 )
               ),
@@ -566,7 +565,6 @@ server <- function(input, output, session) {
   #---------------------------------------------------------------------------
   data_reactive2 <- reactiveVal(NULL)
   ggplot_obj2 <- reactiveVal(NULL)
-  plotly_obj2 <- reactiveVal(NULL)
   
   observeEvent(input$load_sample2, {
     df <- read.csv("data/expression_sample.csv", stringsAsFactors = FALSE)
@@ -797,9 +795,7 @@ server <- function(input, output, session) {
     if (is.null(p)) return()
     
     ggplot_obj2(p)
-    pltly <- ggplotly(p, source = "legend") %>% layout(legend = list(itemclick = "toggleothers"))
-    plotly_obj2(pltly)
-    output$violin_plot2 <- renderPlotly({ pltly })
+    output$violin_plot2 <- renderPlot({ p })
   })
   
   observeEvent(input$update_legend2, {
@@ -808,22 +804,7 @@ server <- function(input, output, session) {
     if (is.null(p)) return()
     
     ggplot_obj2(p)
-    pltly <- ggplotly(p, source = "legend") %>% layout(legend = list(itemclick = "toggleothers"))
-    
-    # 更新 legend 名称
-    for (i in seq_along(pltly$x$data)) {
-      if (!is.null(pltly$x$data[[i]]$name)) {
-        if (pltly$x$data[[i]]$name == input$group1_2) {
-          pltly$x$data[[i]]$name <- input$legend_label1_2
-        }
-        if (pltly$x$data[[i]]$name == input$group2_2) {
-          pltly$x$data[[i]]$name <- input$legend_label2_2
-        }
-      }
-    }
-    
-    plotly_obj2(pltly)
-    output$violin_plot2 <- renderPlotly({ pltly })
+    output$violin_plot2 <- renderPlot({ p })
   })
   
   # 下载图片
