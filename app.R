@@ -31,9 +31,10 @@ library(scales)
 ###############################################################################
 # UI：在 fluidPage 中套用 shinytheme，并添加一些简单的自定义 CSS
 ###############################################################################
-ui <- fluidPage(
+ui <- navbarPage(
   # 应用一个漂亮的主题（可自由更换为cerulean、superhero、united等）
   theme = shinytheme("flatly"),
+  title = "星海之约ZYの❥Shiny",
   
   # 在页面头部添加一些自定义CSS，用于微调表格、按钮、标题等外观
   tags$head(
@@ -87,11 +88,11 @@ ui <- fluidPage(
     "))
   ),
   
-  # 页标题
-  titlePanel("星海之约ZYの❥Shiny"),
-  
-  # 使用 type = 'pills' 让标签页更扁平化
-  tabsetPanel(type = "pills",
+  # 新增：说明页面
+  tabPanel("Instructions",
+           # 在这里放置说明文档
+           uiOutput("instructions_ui")
+  ),
               #=========================================================================#
               # 1. GWAS 表型统计分析工具
               #=========================================================================#
@@ -99,6 +100,7 @@ ui <- fluidPage(
                 "GWAS表型统计分析",
                 sidebarLayout(
                   sidebarPanel(
+                    actionButton("load_sample1", "Load Sample Data", class = "btn btn-info btn-block"),
                     fileInput("gwas_file1", "上传 TSV 文件", accept = c(".tsv"), multiple = TRUE),
                     uiOutput("file_select_ui1"),
                     selectInput("trait1", "选择表型变量", choices = NULL),
@@ -140,6 +142,7 @@ ui <- fluidPage(
                 "基因表达可视化",
                 sidebarLayout(
                   sidebarPanel(
+                    actionButton("load_sample2", "Load Sample Data", class = "btn btn-info btn-block"),
                     fileInput("upload_data2", "上传 CSV 文件（若不上传则使用内置数据）", accept = c(".csv")),
                     textOutput("upload_status2"),
                     textInput("gene_input2", "请输入基因名称（多个基因用逗号或空格分隔）：", value = ""),
@@ -195,6 +198,7 @@ ui <- fluidPage(
                 "表型数据可视化",
                 sidebarLayout(
                   sidebarPanel(
+                    actionButton("load_sample3", "Load Sample Data", class = "btn btn-info btn-block"),
                     fileInput("file3", "Upload CSV File", accept = c(".csv")),
                     selectInput("x_var3", "Select Categorical Variable", choices = NULL),
                     selectInput("y_var3", "Select Phenotype Variable(s)", choices = NULL, multiple = TRUE),
@@ -239,6 +243,7 @@ ui <- fluidPage(
                 "LocusZoom绘图",
                 sidebarLayout(
                   sidebarPanel(
+                    actionButton("load_sample4", "Load Sample Data", class = "btn btn-info btn-block"),
                     fileInput("gwas_file4", "Upload GWAS File (e.g., 47_16447785.csv):", accept = c(".csv")),
                     fileInput("gene_file4", "Upload Gene Track File (e.g., genes.up.csv):", accept = c(".csv")),
                     textInput("lead_snp4", "Enter Lead SNP ID (e.g., '47_16447785'):",
@@ -263,7 +268,6 @@ ui <- fluidPage(
                   )
                 )
               )
-  )
 )
 
 ###############################################################################
@@ -271,25 +275,43 @@ ui <- fluidPage(
 ###############################################################################
 server <- function(input, output, session) {
   
+  # Render instructions_ui content
+  output$instructions_ui <- renderUI({
+    includeMarkdown("instructions.md")
+  })
+
   #---------------------------------------------------------------------------
   # 1. GWAS表型统计分析工具（原逻辑不变）
   #---------------------------------------------------------------------------
-  data_list1 <- reactive({
+  data_list_rv1 <- reactiveVal(NULL)
+
+  observeEvent(input$gwas_file1, {
     req(input$gwas_file1)
     files <- input$gwas_file1
     lst <- lapply(seq_len(nrow(files)), function(i) {
       df <- read_tsv(files$datapath[i], show_col_types = FALSE)
-      # 替换 Genotype 中的竖线 | 为 /，与原始示例保持一致
       df <- df %>% mutate(Genotype = gsub("\\|", "/", Genotype))
       df
     })
     names(lst) <- files$name
-    lst
+    data_list_rv1(lst)
+  })
+
+  observeEvent(input$load_sample1, {
+    df <- read_tsv("data/gwas_sample.tsv", show_col_types = FALSE)
+    df <- df %>% mutate(Genotype = gsub("\\|", "/", Genotype))
+    lst <- list("gwas_sample.tsv" = df)
+    data_list_rv1(lst)
+  })
+
+  data_list1 <- reactive({
+    req(data_list_rv1())
+    data_list_rv1()
   })
   
   output$file_select_ui1 <- renderUI({
-    req(input$gwas_file1)
-    choices <- input$gwas_file1$name
+    req(data_list1())
+    choices <- names(data_list1())
     selectInput("selected_file1", "选择文件", choices = choices, selected = choices[1])
   })
   
@@ -546,6 +568,12 @@ server <- function(input, output, session) {
   ggplot_obj2 <- reactiveVal(NULL)
   plotly_obj2 <- reactiveVal(NULL)
   
+  observeEvent(input$load_sample2, {
+    df <- read.csv("data/expression_sample.csv", stringsAsFactors = FALSE)
+    data_reactive2(df)
+    updateTextInput(session, "gene_input2", value = "GeneA, GeneB, GeneC")
+    output$upload_status2 <- renderText("Sample expression data loaded!")
+  })
   # 如需默认数据集，调整路径；此处仅示例
   DEFAULT_DATA_PATH2 <- file.path("data", "dataset.csv")
   load_default_data2 <- function() {
@@ -831,11 +859,20 @@ server <- function(input, output, session) {
   #---------------------------------------------------------------------------
   # 3. 表型数据可视化（原逻辑不变）
   #---------------------------------------------------------------------------
-  rv3 <- reactiveValues(comparisons = NULL)
+  rv3 <- reactiveValues(comparisons = NULL, data = NULL)
   
-  data3 <- reactive({
+  observeEvent(input$file3, {
     req(input$file3)
-    read.csv(input$file3$datapath, stringsAsFactors = FALSE)
+    rv3$data <- read.csv(input$file3$datapath, stringsAsFactors = FALSE)
+  })
+
+  observeEvent(input$load_sample3, {
+    rv3$data <- read.csv("data/phenotype_sample.csv", stringsAsFactors = FALSE)
+  })
+
+  data3 <- reactive({
+    req(rv3$data)
+    rv3$data
   })
   
   observeEvent(data3(), {
@@ -1148,11 +1185,29 @@ server <- function(input, output, session) {
   #---------------------------------------------------------------------------
   # 4. LocusZoom Plot Generator（原逻辑不变）
   #---------------------------------------------------------------------------
-  observeEvent(input$update_plot4, {
+  gwas_data4 <- reactiveVal()
+  gene_data4 <- reactiveVal()
+
+  observeEvent(input$gwas_file4, {
     req(input$gwas_file4)
+    gwas_data4(read.csv(input$gwas_file4$datapath))
+  })
+
+  observeEvent(input$gene_file4, {
     req(input$gene_file4)
-    gwas_data <- read.csv(input$gwas_file4$datapath)
-    gene_data <- read.csv(input$gene_file4$datapath)
+    gene_data4(read.csv(input$gene_file4$datapath))
+  })
+
+  observeEvent(input$load_sample4, {
+    gwas_data4(read.csv("data/locuszoom_gwas_sample.csv"))
+    gene_data4(read.csv("data/locuszoom_genes_sample.csv"))
+    updateTextInput(session, "lead_snp4", value = "47_16447785")
+  })
+
+  observeEvent(input$update_plot4, {
+    req(gwas_data4(), gene_data4())
+    gwas_data <- gwas_data4()
+    gene_data <- gene_data4()
     
     req(input$lead_snp4)
     target_snp <- input$lead_snp4
