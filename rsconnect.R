@@ -1,11 +1,18 @@
-# 安装 rsconnect 包（如未安装）
-# install.packages("rsconnect")
+# Deploy to shinyapps.io. Credentials are read from environment variables:
+#   SHINYAPPS_ACCOUNT, SHINYAPPS_TOKEN, SHINYAPPS_SECRET
+# e.g. put them in ~/.Renviron, never in this file.
 library(rsconnect)
-setwd("D:\\曾昀毕业论文\\8-大论文\\GWAS论文修改\\从头开始的分析\\tools\\merge_shinny")
-# 设置账号信息（首次部署时需要配置）
-rsconnect::setAccountInfo(name='crafor18',
-                          token='776199A3E6A0AF06EDD3B33982ACA2EB',
-                          secret='DccvEttJD0r0X4WmuWJJNfZ+beea6W+tpu8FYRRd')
 
-# 部署应用
-rsconnect::deployApp(appDir = ".", appName = "Z_Y_ketang_data_analysis_app")
+account <- Sys.getenv("SHINYAPPS_ACCOUNT", "crafor18")
+token <- Sys.getenv("SHINYAPPS_TOKEN")
+secret <- Sys.getenv("SHINYAPPS_SECRET")
+if (!nzchar(token) || !nzchar(secret)) {
+  stop("Set SHINYAPPS_TOKEN and SHINYAPPS_SECRET before deploying.")
+}
+
+rsconnect::setAccountInfo(name = account, token = token, secret = secret)
+rsconnect::deployApp(
+  appDir = ".",
+  appName = "Z_Y_ketang_data_analysis_app",
+  appFiles = c("app.R", "R", "www", "docs", "data/examples", "fonts")
+)
