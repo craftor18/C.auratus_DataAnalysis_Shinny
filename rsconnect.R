@@ -14,5 +14,6 @@ rsconnect::setAccountInfo(name = account, token = token, secret = secret)
 rsconnect::deployApp(
   appDir = ".",
   appName = "Z_Y_ketang_data_analysis_app",
-  appFiles = c("app.R", "R", "www", "docs", "data/examples", "fonts")
+  appFiles = c("app.R", "R", "www", "docs", "data/examples", "fonts"),
+  forceUpdate = TRUE
 )

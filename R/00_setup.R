@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
   library(ggpubr)
   library(scales)
   library(showtext)
+  library(markdown) # used by shiny::includeMarkdown(); listed so deploy bundles it
 })
 
 options(shiny.maxRequestSize = 100 * 1024^2)
